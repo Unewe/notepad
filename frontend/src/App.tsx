@@ -4,8 +4,12 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
+  Navigate
 } from "react-router-dom";
 import {Header} from "./components/header/Header";
+import {Authentication} from "./components/authentication/Authentication";
+import {Button} from "@mui/material";
+import authenticationStore from "./store/authentication";
 
 function App() {
   return (
@@ -18,8 +22,11 @@ function App() {
           <Route path="/about" element={<div>ABOUT</div>}/>
           <Route path="/users" element={<div>USERS</div>}/>
           <Route path="/" element={<div>HOME</div>}/>
+          <Route path="/*" element={<Navigate to="/" />}/>
         </Routes>
       </Router>
+      <Button onClick={() => {authenticationStore.open = true}}>Open</Button>
+      <Authentication/>
     </div>
   );
 }

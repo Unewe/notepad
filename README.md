@@ -8,8 +8,11 @@ INSTALLED_APPS = [
 ]
 
 *** Для запуска:
+pip install -r requirements.txt
 python manage.py runserver
 
 *** Для запуска миграций
 python manage.py makemigrations
 python manage.py migrate
+
+python manage.py createsuperuser

@@ -1,5 +1,3 @@
-from abc import ABC
-
 from django.contrib.auth import authenticate
 from rest_framework import serializers
 
@@ -29,7 +27,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
 
 
 class LoginSerializer(serializers.Serializer):
-    username = serializers.CharField(max_length=255, read_only=True)
+    username = serializers.CharField(max_length=255)
     password = serializers.CharField(max_length=128, write_only=True)
     token = serializers.CharField(max_length=255, read_only=True)
 
@@ -52,7 +50,7 @@ class LoginSerializer(serializers.Serializer):
 
         if user is None:
             raise serializers.ValidationError(
-                'Неверно казано имя пользователя или пароль.'
+                'Неверно указано имя пользователя или пароль.'
             )
 
         if not user.is_active:
@@ -62,5 +60,6 @@ class LoginSerializer(serializers.Serializer):
 
         return {
             'username': user.username,
-            'token': user.token
+            'token': user.token,
+            'password': user.password
         }

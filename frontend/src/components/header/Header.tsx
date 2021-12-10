@@ -2,6 +2,7 @@ import React, {MouseEvent, useCallback} from "react";
 import {Tab, Tabs} from "@mui/material";
 import {useLocation, useNavigate} from "react-router-dom";
 import {makeStyles} from "@mui/styles";
+import {observer} from "mobx-react-lite";
 
 const routes: Array<{ label: string, href: string }> = [
   {label: "Main", href: "/"},
@@ -27,7 +28,7 @@ const LinkTab: React.FC<{ label: string, href: string }> = ({children, ...props}
   );
 }
 
-export const Header: React.FC = (): React.ReactElement => {
+export const Header: React.FC = observer((): React.ReactElement => {
   const classes = useStyles();
   const location = useLocation();
   const navigate = useNavigate();
@@ -42,4 +43,4 @@ export const Header: React.FC = (): React.ReactElement => {
       {routes.map((route, index) => <LinkTab key={index} {...route}/>)}
     </Tabs>
   )
-}
+});

@@ -10,18 +10,34 @@ class UsersService {
     if (token) {
       UsersService.applyToken(token)
     }
-  }
 
-  login(data: LoginForm) {
-    return axios.post<{user: LoginForm}>("/api/users/login/", {user: data}).then(value => {
-      authentication.open = false;
-      value.data.user.token && UsersService.applyToken(value.data.user.token);
-      authentication.user = new User();
+    axios.interceptors.response.use(response => response, error => {
+      // Если приходит ошибка "Отказано в доступе" - то разлогиниваем пользователя.
+      // Пусть регается заново!
+      error.response === 403 && this.logout();
+      return Promise.reject(error);
     });
   }
 
+  login(data: LoginForm) {
+    return axios.post<Required<Pick<LoginForm, "id" | "username" | "token">>>(
+      "/api/users/login/",
+      {user: data}).then(value => {
+      value.data.token && UsersService.applyToken(value.data.token);
+      authentication.user = new User(value.data.id, value.data.username);
+    }, reason => {
+      this.logout();
+      throw reason.response.data.errors.error;
+    });
+  }
+
+  logout() {
+    axios.defaults.headers.common = {};
+    authentication.user = undefined;
+    localStorage.removeItem(UsersService.tokenKey);
+  }
+
   private static applyToken(token: string) {
-    console.log(token);
     axios.defaults.headers.common = {'Authorization': `Bearer ${token}`};
     localStorage.setItem(UsersService.tokenKey, token);
   }

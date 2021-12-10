@@ -1,4 +1,4 @@
-import React, {useCallback} from "react";
+import React, {useCallback, useState} from "react";
 import {
   Box,
   Button,
@@ -15,24 +15,27 @@ import {LoginForm} from "../../models/user";
 import UsersService from "../../services/users";
 
 export const Authentication: React.FC = observer((): React.ReactElement => {
-  const { register, handleSubmit, reset, formState: { errors,  } } = useForm<LoginForm>();
+  const {register, handleSubmit, reset, formState: {errors,}} = useForm<LoginForm>();
+  const [error, setError] = useState(undefined);
 
   const handleClose = useCallback(() => {
     authenticationStore.open = false;
     reset();
-  }, []);
+  }, [reset]);
 
   const submit = useCallback(data => {
-    UsersService.login(data);
-    handleClose();
-  }, []);
+    UsersService.login(data).then(handleClose).catch(reason => {
+      setError(reason);
+      setTimeout(() => setError(undefined), 3000);
+    });
+  }, [handleClose]);
 
   return (
     <Dialog maxWidth={"xs"} open={authenticationStore.open} onClose={handleClose}>
       <DialogTitle>Авторизация</DialogTitle>
       <DialogContent>
-        <DialogContentText>
-          Чтобы войти на сайт нужно ввести логи и пароль.
+        <DialogContentText sx={error && {color: "red"}}>
+          {error || "Чтобы войти на сайт нужно ввести логи и пароль."}
         </DialogContentText>
         <Box
           component="form"
@@ -46,8 +49,9 @@ export const Authentication: React.FC = observer((): React.ReactElement => {
             label="Логин"
             fullWidth
             variant="outlined"
+            sx={{mt: 3}}
             error={!!errors.username}
-            {...register("username", { required: true, minLength: 3})}
+            {...register("username", {required: true, minLength: 3})}
           />
           <TextField
             margin="dense"
@@ -56,7 +60,7 @@ export const Authentication: React.FC = observer((): React.ReactElement => {
             fullWidth
             variant="outlined"
             error={!!errors.password}
-            {...register("password", { required: true, minLength: 3})}
+            {...register("password", {required: true, minLength: 3})}
           />
           <Button type={"submit"} sx={{mt: 3}} size={"large"} variant="outlined" fullWidth>Войти</Button>
         </Box>

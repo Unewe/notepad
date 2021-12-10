@@ -10,6 +10,7 @@ import {Header} from "./components/header/Header";
 import {Authentication} from "./components/authentication/Authentication";
 import {Button} from "@mui/material";
 import authenticationStore from "./store/authentication";
+import notesService from "./services/notes"
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
         </Routes>
       </Router>
       <Button onClick={() => {authenticationStore.open = true}}>Open</Button>
+      <Button onClick={() => {notesService.test()}}>Tests</Button>
       <Authentication/>
     </div>
   );

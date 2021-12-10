@@ -27,6 +27,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
 
 
 class LoginSerializer(serializers.Serializer):
+    id = serializers.IntegerField(read_only=True)
     username = serializers.CharField(max_length=255)
     password = serializers.CharField(max_length=128, write_only=True)
     token = serializers.CharField(max_length=255, read_only=True)
@@ -59,6 +60,7 @@ class LoginSerializer(serializers.Serializer):
             )
 
         return {
+            'id': user.pk,
             'username': user.username,
             'token': user.token,
             'password': user.password

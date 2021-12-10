@@ -15,15 +15,16 @@ import {LoginForm} from "../../models/user";
 import UsersService from "../../services/users";
 
 export const Authentication: React.FC = observer((): React.ReactElement => {
+  const { register, handleSubmit, reset, formState: { errors,  } } = useForm<LoginForm>();
 
   const handleClose = useCallback(() => {
     authenticationStore.open = false;
+    reset();
   }, []);
-
-  const { register, handleSubmit, formState: { errors } } = useForm<LoginForm>();
 
   const submit = useCallback(data => {
     UsersService.login(data);
+    handleClose();
   }, []);
 
   return (

@@ -1,5 +1,5 @@
 import axios from "axios";
-import {LoginForm, User} from "../models/user";
+import {LoginForm, User, UserRequest} from "../models/user";
 import authentication from "../store/authentication";
 
 class UsersService {
@@ -19,15 +19,21 @@ class UsersService {
     });
   }
 
-  login(data: LoginForm) {
-    return axios.post<Required<Pick<LoginForm, "id" | "username" | "token">>>(
-      "/api/users/login/",
-      {user: data}).then(value => {
+  login(data: UserRequest) {
+    return this.handleLoginOrRegister("/api/users/login/", data);
+  }
+
+  register(data: UserRequest) {
+    return this.handleLoginOrRegister("api/users/", data);
+  }
+
+  private handleLoginOrRegister(api: string, data: UserRequest) {
+    return axios.post<Required<Pick<LoginForm, "id" | "username" | "token">>>(api, data).then(value => {
       value.data.token && UsersService.applyToken(value.data.token);
       authentication.user = new User(value.data.id, value.data.username);
     }, reason => {
       this.logout();
-      throw reason.response.data.errors.error;
+      throw Object.values(reason.response.data.errors).flat(Infinity);
     });
   }
 

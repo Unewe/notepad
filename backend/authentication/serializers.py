@@ -6,27 +6,36 @@ from .models import User
 
 class RegistrationSerializer(serializers.ModelSerializer):
     """ Сериализация регистрации пользователя и создания нового. """
-
-    # Необходимо убедиться, что пароль соответствует правилам сайта.
     password = serializers.CharField(
         max_length=128,
-        min_length=6,
+        min_length=3,
         write_only=True
     )
 
-    # Клиентская сторона не должна иметь возможность отправлять токен вместе с
-    # запросом на регистрацию. Сделаем его доступным только на чтение.
     token = serializers.CharField(max_length=255, read_only=True)
 
     class Meta:
         model = User
-        fields = ['username', 'password', 'token']
+        fields = ['id', 'username', 'password', 'token']
 
     def create(self, validated_data):
-        return User.objects.create_user(**validated_data)
+        user = User.objects.create_user(**validated_data)
+
+        return {
+            'id': user.pk,
+            'username': user.username,
+            'token': user.token,
+            'password': user.password
+        }
 
 
 class LoginSerializer(serializers.Serializer):
+    def update(self, instance, validated_data):
+        pass
+
+    def create(self, validated_data):
+        pass
+
     id = serializers.IntegerField(read_only=True)
     username = serializers.CharField(max_length=255)
     password = serializers.CharField(max_length=128, write_only=True)

@@ -11,10 +11,6 @@ INSTALLED_APPS = [
 pip install -r requirements.txt
 python manage.py runserver
 
-*** Окружение:
-python3 -m venv ./venv
-source venv/bin/activate
-
 *** Для запуска миграций
 python manage.py makemigrations
 python manage.py migrate

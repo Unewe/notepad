@@ -33,7 +33,7 @@ class UsersService {
       authentication.user = new User(value.data.id, value.data.username);
     }, reason => {
       this.logout();
-      throw Object.values(reason.response.data.errors).flat(Infinity);
+      throw Object.values(reason?.response?.data?.errors ?? {}).flat(Infinity)[0] || "Что то пошло не так.";
     });
   }
 

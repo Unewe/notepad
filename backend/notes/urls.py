@@ -1,8 +1,8 @@
 from django.urls import path
 
-from .views import TestApiView
+from .views import NoteApiView
 
 app_name = 'notes'
 urlpatterns = [
-    path('test/', TestApiView.as_view()),
+    path('test/', NoteApiView.as_view()),
 ]

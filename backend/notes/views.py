@@ -1,15 +1,27 @@
-from rest_framework import status
+from rest_framework import status, serializers
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework import serializers
-from rest_framework.renderers import JSONRenderer
+from .serializers import NoteSerializer
+from .models import Note
 
 
-class TestApiView(APIView):
+class NoteApiView(APIView):
     permission_classes = (IsAuthenticated,)
-    serializer_class = serializers.CharField()
-    renderer_classes = (JSONRenderer,)
+    serializer_class = NoteSerializer
 
     def get(self, request):
-        return Response({"Hello"}, status=status.HTTP_200_OK)
+        notes = Note.objects.all()
+        return Response(notes, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        note = request.data
+        serializer = self.serializer_class(data=note)
+        try:
+            serializer.save()
+        except serializers.ValidationError:
+            raise serializers.ValidationError(
+                'Ошибка при сохранении блокнота.'
+            )
+
+        return Response(serializer.data, status=status.HTTP_200_OK)

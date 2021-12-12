@@ -15,4 +15,5 @@ export class LoginForm {
   token?: string;
 }
 
-export type UserRequest = Required<Pick<LoginForm, "username" | "password">>;
+export type LoginRequest = Required<Pick<LoginForm, "username" | "password">>;
+export type LoginResponse = Required<Pick<LoginForm, "id" | "username" | "token">>;

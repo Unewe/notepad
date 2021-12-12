@@ -1,5 +1,5 @@
 import axios from "axios";
-import {LoginForm, User, UserRequest} from "../models/user";
+import {LoginResponse, User, LoginRequest} from "../models/user";
 import authentication from "../store/authentication";
 
 class UsersService {
@@ -19,31 +19,32 @@ class UsersService {
     });
   }
 
-  login(data: UserRequest) {
+  login(data: LoginRequest): Promise<LoginResponse> {
     return this.handleLoginOrRegister("/api/users/login/", data);
   }
 
-  register(data: UserRequest) {
+  register(data: LoginRequest): Promise<LoginResponse> {
     return this.handleLoginOrRegister("api/users/", data);
   }
 
-  private handleLoginOrRegister(api: string, data: UserRequest) {
-    return axios.post<Required<Pick<LoginForm, "id" | "username" | "token">>>(api, data).then(value => {
+  private handleLoginOrRegister(api: string, data: LoginRequest): Promise<LoginResponse> {
+    return axios.post<LoginResponse>(api, data).then(value => {
       value.data.token && UsersService.applyToken(value.data.token);
       authentication.user = new User(value.data.id, value.data.username);
+      return value.data;
     }, reason => {
       this.logout();
       throw Object.values(reason?.response?.data?.errors ?? {}).flat(Infinity)[0] || "Что то пошло не так.";
     });
   }
 
-  logout() {
+  logout(): void {
     axios.defaults.headers.common = {};
     authentication.user = undefined;
     localStorage.removeItem(UsersService.tokenKey);
   }
 
-  private static applyToken(token: string) {
+  private static applyToken(token: string): void {
     axios.defaults.headers.common = {'Authorization': `Bearer ${token}`};
     localStorage.setItem(UsersService.tokenKey, token);
   }

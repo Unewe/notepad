@@ -11,11 +11,11 @@ import {
 import {observer} from "mobx-react-lite";
 import authenticationStore from "../../store/authentication";
 import {useForm} from "react-hook-form";
-import {UserRequest} from "../../models/user";
+import {LoginRequest} from "../../models/user";
 import UsersService from "../../services/users";
 
 export const Authentication: React.FC = observer((): React.ReactElement => {
-  const {register, handleSubmit, reset, formState: {errors,}} = useForm<Partial<UserRequest>>();
+  const {register, handleSubmit, reset, formState: {errors,}} = useForm<Partial<LoginRequest>>();
   const [error, setError] = useState<string | undefined>(undefined);
 
   const handleClose = useCallback(() => {
@@ -23,7 +23,7 @@ export const Authentication: React.FC = observer((): React.ReactElement => {
     reset();
   }, [reset]);
 
-  const submit = (data: UserRequest) => {
+  const submit = (data: LoginRequest) => {
     UsersService.login(data).then(handleClose).catch(reason => {
       setError(reason);
       setTimeout(() => setError(undefined), 3000);

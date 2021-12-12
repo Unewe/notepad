@@ -11,8 +11,11 @@ class NoteApiView(APIView):
     serializer_class = NoteSerializer
 
     def get(self, request):
-        notes = Note.objects.all()
-        return Response(notes, status=status.HTTP_200_OK)
+        user = request.user
+        notes = Note.objects.filter(user_id=user.pk)
+        serializer = self.serializer_class(notes, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
         note = request.data
@@ -24,4 +27,11 @@ class NoteApiView(APIView):
                 'Ошибка при сохранении блокнота.'
             )
 
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    def put(self):
+        pass
+
+    def delete(self):
+        pass
+    

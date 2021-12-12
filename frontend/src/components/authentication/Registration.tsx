@@ -2,12 +2,12 @@ import React, {useCallback, useState} from "react";
 import authenticationStore from "../../store/authentication";
 import {Box, Button, Dialog, DialogContent, DialogContentText, DialogTitle, TextField} from "@mui/material";
 import {useForm} from "react-hook-form";
-import {UserRequest} from "../../models/user";
+import {LoginRequest} from "../../models/user";
 import UsersService from "../../services/users";
 import {observer} from "mobx-react-lite";
 
 export const Registration: React.FC = observer((): React.ReactElement => {
-  const {register, handleSubmit, reset, getValues, formState: {errors, }} = useForm<UserRequest & {repeat: string}>();
+  const {register, handleSubmit, reset, getValues, formState: {errors, }} = useForm<LoginRequest & {repeat: string}>();
   const [error, setError] = useState<string | undefined>(undefined);
 
   const handleClose = useCallback(() => {
@@ -15,7 +15,7 @@ export const Registration: React.FC = observer((): React.ReactElement => {
     reset();
   }, [reset]);
 
-  const submit = (data: UserRequest) => {
+  const submit = (data: LoginRequest) => {
     UsersService.register(data).catch(reason => {
       setError(reason);
     });

@@ -10,4 +10,4 @@ class Note(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.label
+        return self.label.__str__() + ": " + self.text.__str__()

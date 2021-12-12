@@ -12,6 +12,7 @@ import {Button} from "@mui/material";
 import authenticationStore from "./store/authentication";
 import notesService from "./services/notes"
 import {Registration} from "./components/authentication/Registration";
+import {Notes} from "./views/notes/Notes";
 
 function App() {
   return (
@@ -22,13 +23,13 @@ function App() {
         </header>
         <Routes>
           <Route path="/about" element={<div>ABOUT</div>}/>
-          <Route path="/users" element={<div>USERS</div>}/>
+          <Route path="/users" element={<Notes/>}/>
           <Route path="/" element={<div>HOME</div>}/>
           <Route path="/*" element={<Navigate to="/" />}/>
         </Routes>
       </Router>
       <Button onClick={() => {authenticationStore.authModal = true}}>Open</Button>
-      <Button onClick={() => {notesService.test()}}>Tests</Button>
+      <Button onClick={() => {notesService.get()}}>Notes</Button>
       <Authentication/>
       <Registration/>
     </div>

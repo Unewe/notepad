@@ -1,22 +1,24 @@
-import React, { FormEvent, useEffect, useState } from 'react';
+import React, { FormEvent, useEffect } from 'react';
 import Masonry from '@mui/lab/Masonry';
 import { Box, Container } from '@mui/material';
 import { Note } from '../../models/note';
 import NotesService from '../../services/notes';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { NotePaper } from '../../components/note-paper/NotePaper';
+import notes from '../../store/notes';
+import { observer } from 'mobx-react-lite';
 
-export const Notes: React.FC = (): React.ReactElement => {
-  const [notes, setNotes] = useState<Array<Note>>([]);
-
+export const Notes: React.FC = observer((): React.ReactElement => {
   useEffect(() => {
-    NotesService.get().then((value) => setNotes(value));
+    NotesService.get();
   }, []);
 
   const handleChange = (event: FormEvent<HTMLDivElement>, note: Note) => {
     const text: string = (event.target as HTMLDivElement).innerHTML;
     if (note.text !== text) {
-      NotesService.update({ ...note, text });
+      NotesService.update({ ...note, text }).then((_value) => {
+        notes.update(text);
+      });
     }
   };
 
@@ -26,7 +28,7 @@ export const Notes: React.FC = (): React.ReactElement => {
       backgroundColor: '',
       color: '',
       label: '',
-    });
+    }).then((value) => notes.push(value));
   };
 
   const deleteNote = ({ id }: Note) => {
@@ -36,7 +38,7 @@ export const Notes: React.FC = (): React.ReactElement => {
   return (
     <Container sx={{ pt: 5 }}>
       <Masonry columns={{ xs: 1, sm: 2, md: 4 }} spacing={1}>
-        {notes.map((note) => (
+        {notes.list.map((note) => (
           <Box
             key={note.id}
             sx={{
@@ -82,4 +84,4 @@ export const Notes: React.FC = (): React.ReactElement => {
       </Masonry>
     </Container>
   );
-};
+});

@@ -12,7 +12,7 @@ class NoteApiView(APIView):
 
     def get(self, request):
         user = request.user
-        notes = Note.objects.filter(user_id=user.pk)
+        notes = Note.objects.filter(user_id=user.pk).order_by('created_at')
         serializer = self.serializer_class(notes, many=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)

@@ -1,9 +1,12 @@
 import axios from 'axios';
 import { Note, NoteForm } from '../models/note';
+import notes from '../store/notes';
 
 class Notes {
-  get(): Promise<Array<Note>> {
-    return axios.get('/api/notes').then((value) => value.data);
+  get(): void {
+    axios.get('/api/notes').then((value) => {
+      notes.list = value.data;
+    });
   }
 
   create(note: NoteForm): Promise<Note> {
@@ -33,7 +36,9 @@ class Notes {
   }
 
   delete(id: number): void {
-    axios.delete('/api/notes', { params: { id } }).then();
+    axios
+      .delete('/api/notes', { params: { id } })
+      .then((_value) => notes.delete(id));
   }
 }
 

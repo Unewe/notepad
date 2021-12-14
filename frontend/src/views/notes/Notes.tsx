@@ -1,38 +1,71 @@
-import React, {useEffect, useState} from "react";
-import { styled } from '@mui/material/styles';
-import Paper from '@mui/material/Paper';
+import React, {FormEvent, useEffect, useState} from "react";
 import Masonry from '@mui/lab/Masonry';
-import {Container} from "@mui/material";
+import {Box, Container} from "@mui/material";
 import {Note} from "../../models/note";
 import NotesService from "../../services/notes";
-
-const Item = styled(Paper)(({ theme }) => ({
-  ...theme.typography.body2,
-  color: theme.palette.text.secondary,
-  border: '1px solid black',
-  padding: '15px',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-}));
+import DeleteIcon from '@mui/icons-material/Delete';
+import {NotePaper} from "../../components/note-paper/NotePaper";
 
 export const Notes: React.FC = (): React.ReactElement => {
   const [notes, setNotes] = useState<Array<Note>>([]);
 
   useEffect(() => {
     NotesService.get().then(value => setNotes(value))
-  })
+  }, []);
+
+  const handleChange = (event: FormEvent<HTMLDivElement>, note: Note) => {
+    const text: string = (event.target as HTMLDivElement).innerHTML;
+    if (note.text !== text) {
+      NotesService.update({...note, text});
+    }
+  }
+
+  const addEmpty = () => {
+    NotesService.create({text: "", backgroundColor: "", color: "", label: ""});
+  }
+
+  const deleteNote = ({id}: Note) => {
+    NotesService.delete(id);
+  }
 
   return (
     <Container sx={{pt: 5}}>
-      <Masonry columns={4} spacing={1}>
+      <Masonry columns={{xs: 1, sm: 2, md: 4}} spacing={1}>
         {notes.map((note) => (
-          <Item key={note.id} sx={{ backgroundColor: note.color }}>
-            {note.text}
-          </Item>
+          <Box key={note.id} sx={{
+            position: "relative",
+            "&:hover": {
+              ".MuiSvgIcon-root": {display: "block"}
+            }
+          }}>
+            <DeleteIcon
+              onClick={() => deleteNote(note)}
+              sx={{
+              position: "absolute",
+              right: "-10px",
+              top: "-10px",
+              display: "none",
+              "&:hover": {
+                color: "red",
+                cursor: "pointer"
+              }
+            }}/>
+            <NotePaper spellCheck={false}
+                       contentEditable={true} key={note.id}
+                       suppressContentEditableWarning={true}
+                       onBlur={event => handleChange(event, note)}
+                       onPaste={event => event.preventDefault()}
+                       sx={{
+                         color: note.color || "black",
+                         backgroundColor: note.backgroundColor || "white",
+                         overflow: "scroll"
+                       }}>
+              {note.text}
+            </NotePaper>
+          </Box>
         ))}
+        <NotePaper onClick={addEmpty} sx={{backgroundColor: "#7fc9ff"}}>+</NotePaper>
       </Masonry>
     </Container>
   )
 }
-

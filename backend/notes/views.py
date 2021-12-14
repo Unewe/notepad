@@ -18,10 +18,12 @@ class NoteApiView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
+        user = request.user
         note = request.data
         serializer = self.serializer_class(data=note)
         try:
-            serializer.save()
+            serializer.is_valid(raise_exception=True)
+            serializer.save(user_id=user.pk)
         except serializers.ValidationError:
             raise serializers.ValidationError(
                 'Ошибка при сохранении блокнота.'
@@ -29,9 +31,25 @@ class NoteApiView(APIView):
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    def put(self):
-        pass
+    def put(self, request):
+        user = request.user
+        note = request.data
+        instance = Note.objects.get(user_id=user.pk, id=note.get('id'))
 
-    def delete(self):
-        pass
+        if instance is None:
+            raise serializers.ValidationError('Давай, завязывай!')
+
+        serializer = self.serializer_class(data=note)
+        try:
+            serializer.is_valid(raise_exception=True)
+            serializer.update(instance, note)
+        except serializers.ValidationError:
+            raise serializers.ValidationError('Ошибка при обновлении блокнота.')
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def delete(self, request):
+        user = request.user
+        note_id = request.query_params.get('id', -1)
+        Note.objects.get(user_id=user.pk, id=note_id).delete()
+        return Response(status=status.HTTP_200_OK)
     

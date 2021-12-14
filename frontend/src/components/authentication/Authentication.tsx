@@ -40,7 +40,7 @@ export const Authentication: React.FC = observer((): React.ReactElement => {
       <DialogTitle>Авторизация</DialogTitle>
       <DialogContent>
         <DialogContentText sx={error ? {color: "red"} : undefined}>
-          {error || "Чтобы войти на сайт нужно ввести логи и пароль."}
+          {error || "Чтобы войти на сайт нужно ввести логин и пароль."}
         </DialogContentText>
         <Box
           component="form"

@@ -9,6 +9,7 @@ class UsersService {
     const token = localStorage.getItem(UsersService.tokenKey);
     if (token) {
       UsersService.applyToken(token)
+      this.current();
     }
 
     axios.interceptors.response.use(response => response, error => {
@@ -20,11 +21,21 @@ class UsersService {
   }
 
   login(data: LoginRequest): Promise<LoginResponse> {
-    return this.handleLoginOrRegister("/api/users/login/", data);
+    return this.handleLoginOrRegister("/api/users/login", data);
   }
 
   register(data: LoginRequest): Promise<LoginResponse> {
-    return this.handleLoginOrRegister("api/users/", data);
+    return this.handleLoginOrRegister("api/users", data);
+  }
+
+  current(): void {
+    axios.get<LoginResponse>("api/users/current").then(value => {
+      authentication.user = new User(value.data.id, value.data.username);
+      return value.data;
+    }, reason => {
+      // this.logout();
+      throw Object.values(reason?.response?.data?.errors ?? {}).flat(Infinity)[0] || "Что то пошло не так.";
+    });
   }
 
   private handleLoginOrRegister(api: string, data: LoginRequest): Promise<LoginResponse> {

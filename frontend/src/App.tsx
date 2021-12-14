@@ -13,6 +13,10 @@ import authenticationStore from "./store/authentication";
 import notesService from "./services/notes"
 import {Registration} from "./components/authentication/Registration";
 import {Notes} from "./views/notes/Notes";
+import '@fontsource/roboto/300.css';
+import '@fontsource/roboto/400.css';
+import '@fontsource/roboto/500.css';
+import '@fontsource/roboto/700.css';
 
 function App() {
   return (
@@ -23,7 +27,7 @@ function App() {
         </header>
         <Routes>
           <Route path="/about" element={<div>ABOUT</div>}/>
-          <Route path="/users" element={<Notes/>}/>
+          <Route path="/notes" element={<Notes/>}/>
           <Route path="/" element={<div>HOME</div>}/>
           <Route path="/*" element={<Navigate to="/" />}/>
         </Routes>

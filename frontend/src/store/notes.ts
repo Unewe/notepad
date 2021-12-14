@@ -1,4 +1,4 @@
-import {makeAutoObservable} from "mobx";
+import { makeAutoObservable } from 'mobx';
 
 class Notes {
   private _list: Array<Notes> = [];
@@ -7,7 +7,6 @@ class Notes {
   constructor() {
     makeAutoObservable(this);
   }
-
 
   get list(): Array<Notes> {
     return this._list;

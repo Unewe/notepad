@@ -1,5 +1,5 @@
-import {styled} from "@mui/material/styles";
-import Paper from "@mui/material/Paper";
+import { styled } from '@mui/material/styles';
+import Paper from '@mui/material/Paper';
 
 export const NotePaper = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,

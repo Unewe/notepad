@@ -4,6 +4,8 @@ export type Note = {
   label?: string;
   color?: string;
   backgroundColor?: string;
-}
+};
 
-export type NoteForm = Partial<Pick<Note, "label" | "color" | "text" | "backgroundColor">>;
+export type NoteForm = Partial<
+  Pick<Note, 'label' | 'color' | 'text' | 'backgroundColor'>
+>;

@@ -1,5 +1,5 @@
-import {User} from "../models/user";
-import {makeAutoObservable} from "mobx";
+import { User } from '../models/user';
+import { makeAutoObservable } from 'mobx';
 
 class AuthenticationStore {
   private _authModal = false;
@@ -17,7 +17,6 @@ class AuthenticationStore {
   set user(value) {
     this._user = value;
   }
-
 
   get authModal(): boolean {
     return this._authModal;

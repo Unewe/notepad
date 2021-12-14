@@ -1,6 +1,6 @@
 export class User {
   id: number = -1;
-  username: string = "";
+  username: string = '';
 
   constructor(id: number, username: string) {
     this.id = id;
@@ -15,5 +15,7 @@ export class LoginForm {
   token?: string;
 }
 
-export type LoginRequest = Required<Pick<LoginForm, "username" | "password">>;
-export type LoginResponse = Required<Pick<LoginForm, "id" | "username" | "token">>;
+export type LoginRequest = Required<Pick<LoginForm, 'username' | 'password'>>;
+export type LoginResponse = Required<
+  Pick<LoginForm, 'id' | 'username' | 'token'>
+>;

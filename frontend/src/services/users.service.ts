@@ -1,6 +1,8 @@
 import axios from 'axios';
-import { LoginResponse, User, LoginRequest } from '../models/user';
-import authentication from '../store/authentication';
+import { LoginResponse, User, LoginRequest } from '../models/user.model';
+import authenticationStore from '../store/authentication.store';
+import NotesService from './notes.service';
+import notesStore from '../store/notes.store';
 
 class UsersService {
   static readonly tokenKey = 'notepad_api_token';
@@ -18,24 +20,17 @@ class UsersService {
         // Если приходит ошибка "Отказано в доступе"
         // - то разлогиниваем пользователя.
         // Пусть регается заново!
-        error.response === 403 && this.logout();
+        error.response.status === 403 && this.logout();
         return Promise.reject(error);
       }
     );
   }
 
-  login(data: LoginRequest): Promise<LoginResponse> {
-    return this.handleLoginOrRegister('/api/users/login', data);
-  }
-
-  register(data: LoginRequest): Promise<LoginResponse> {
-    return this.handleLoginOrRegister('api/users', data);
-  }
-
   current(): void {
     axios.get<LoginResponse>('api/users/current').then(
       (value) => {
-        authentication.user = new User(value.data.id, value.data.username);
+        authenticationStore.user = new User(value.data.id, value.data.username);
+        NotesService.get();
         return value.data;
       },
       (reason) => {
@@ -49,6 +44,14 @@ class UsersService {
     );
   }
 
+  login(data: LoginRequest): Promise<LoginResponse> {
+    return this.handleLoginOrRegister('/api/users/login', data);
+  }
+
+  register(data: LoginRequest): Promise<LoginResponse> {
+    return this.handleLoginOrRegister('api/users', data);
+  }
+
   private handleLoginOrRegister(
     api: string,
     data: LoginRequest
@@ -56,7 +59,8 @@ class UsersService {
     return axios.post<LoginResponse>(api, data).then(
       (value) => {
         value.data.token && UsersService.applyToken(value.data.token);
-        authentication.user = new User(value.data.id, value.data.username);
+        authenticationStore.user = new User(value.data.id, value.data.username);
+        NotesService.get();
         return value.data;
       },
       (reason) => {
@@ -72,7 +76,8 @@ class UsersService {
 
   logout(): void {
     axios.defaults.headers.common = {};
-    authentication.user = undefined;
+    authenticationStore.user = undefined;
+    notesStore.list = [];
     localStorage.removeItem(UsersService.tokenKey);
   }
 

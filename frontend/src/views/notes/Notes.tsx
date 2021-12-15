@@ -1,24 +1,18 @@
-import React, { FormEvent, useEffect } from 'react';
+import React, { FormEvent } from 'react';
 import Masonry from '@mui/lab/Masonry';
 import { Box, Container } from '@mui/material';
-import { Note } from '../../models/note';
-import NotesService from '../../services/notes';
+import { Note } from '../../models/note.model';
+import NotesService from '../../services/notes.service';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { NotePaper } from '../../components/note-paper/NotePaper';
-import notes from '../../store/notes';
+import notes from '../../store/notes.store';
 import { observer } from 'mobx-react-lite';
 
 export const Notes: React.FC = observer((): React.ReactElement => {
-  useEffect(() => {
-    NotesService.get();
-  }, []);
-
   const handleChange = (event: FormEvent<HTMLDivElement>, note: Note) => {
     const text: string = (event.target as HTMLDivElement).innerHTML;
     if (note.text !== text) {
-      NotesService.update({ ...note, text }).then((_value) => {
-        notes.update(text);
-      });
+      NotesService.update({ ...note, text });
     }
   };
 
@@ -28,7 +22,7 @@ export const Notes: React.FC = observer((): React.ReactElement => {
       backgroundColor: '',
       color: '',
       label: '',
-    }).then((value) => notes.push(value));
+    });
   };
 
   const deleteNote = ({ id }: Note) => {

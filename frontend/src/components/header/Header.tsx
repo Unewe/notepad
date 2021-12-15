@@ -11,8 +11,8 @@ import {
 import { useLocation, useNavigate } from 'react-router-dom';
 import { makeStyles } from '@mui/styles';
 import { observer } from 'mobx-react-lite';
-import authentication from '../../store/authentication';
-import UsersService from '../../services/users';
+import authentication from '../../store/authentication.store';
+import UsersService from '../../services/users.service';
 
 const routes: Array<{ label: string; href: string }> = [
   { label: 'Главная', href: '/' },

@@ -1,7 +1,7 @@
 import { makeAutoObservable } from 'mobx';
-import { Note } from '../models/note';
+import { Note } from '../models/note.model';
 
-class Notes {
+class NotesStore {
   private _list: Array<Note> = [];
   private _editId?: number;
 
@@ -51,4 +51,4 @@ class Notes {
   }
 }
 
-export default new Notes();
+export default new NotesStore();

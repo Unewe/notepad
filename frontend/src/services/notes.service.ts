@@ -1,17 +1,18 @@
 import axios from 'axios';
-import { Note, NoteForm } from '../models/note';
-import notes from '../store/notes';
+import { Note, NoteForm } from '../models/note.model';
+import notes from '../store/notes.store';
+import notesStore from '../store/notes.store';
 
-class Notes {
+class NotesService {
   get(): void {
     axios.get('/api/notes').then((value) => {
       notes.list = value.data;
     });
   }
 
-  create(note: NoteForm): Promise<Note> {
-    return axios.post<Note>('/api/notes', note).then(
-      (value) => value.data,
+  create(note: NoteForm): void {
+    axios.post<Note>('/api/notes', note).then(
+      (value) => notesStore.push(value.data),
       (reason) => {
         throw (
           Object.values(reason?.response?.data?.errors ?? {}).flat(
@@ -22,9 +23,9 @@ class Notes {
     );
   }
 
-  update(note: Note): Promise<Note> {
-    return axios.put<Note>('/api/notes', note).then(
-      (value) => value.data,
+  update(note: Note): void {
+    axios.put<Note>('/api/notes', note).then(
+      (value) => notesStore.update(value.data.text),
       (reason) => {
         throw (
           Object.values(reason?.response?.data?.errors ?? {}).flat(
@@ -42,4 +43,4 @@ class Notes {
   }
 }
 
-export default new Notes();
+export default new NotesService();

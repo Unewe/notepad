@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import authenticationStore from '../../store/authentication';
+import authenticationStore from '../../store/authentication.store';
 import {
   Box,
   Button,
@@ -10,8 +10,8 @@ import {
   TextField,
 } from '@mui/material';
 import { useForm } from 'react-hook-form';
-import { LoginRequest } from '../../models/user';
-import UsersService from '../../services/users';
+import { LoginRequest } from '../../models/user.model';
+import UsersService from '../../services/users.service';
 import { observer } from 'mobx-react-lite';
 
 export const Registration: React.FC = observer((): React.ReactElement => {
@@ -30,9 +30,11 @@ export const Registration: React.FC = observer((): React.ReactElement => {
   }, [reset]);
 
   const submit = (data: LoginRequest) => {
-    UsersService.register(data).catch((reason) => {
-      setError(reason);
-    });
+    UsersService.register(data)
+      .then(handleClose)
+      .catch((reason) => {
+        setError(reason);
+      });
 
     setTimeout(() => setError(undefined), 3000);
   };

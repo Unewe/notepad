@@ -10,10 +10,10 @@ import {
   TextField,
 } from '@mui/material';
 import { observer } from 'mobx-react-lite';
-import authenticationStore from '../../store/authentication';
+import authenticationStore from '../../store/authentication.store';
 import { useForm } from 'react-hook-form';
-import { LoginRequest } from '../../models/user';
-import UsersService from '../../services/users';
+import { LoginRequest } from '../../models/user.model';
+import UsersService from '../../services/users.service';
 
 export const Authentication: React.FC = observer((): React.ReactElement => {
   const {

@@ -1,20 +1,13 @@
-pip3 freeze > requirements.txt
+### Для запуска в Docker:
+docker-compose up -d
 
-*** Для добавления модулей.
-python manage.py startapp apiName
+### Frontend:
+npm install
+npm start
 
-INSTALLED_APPS = [
-    'apiName.apps.MyapiConfig', ...
-]
-
-*** Для запуска:
+### Backend:
 python3 -m venv note-env
 source note-env/bin/activate
 pip install -r requirements.txt
-python manage.py runserver
-
-*** Для запуска миграций
-python manage.py makemigrations
 python manage.py migrate
-
-python manage.py createsuperuser
+python manage.py runserver

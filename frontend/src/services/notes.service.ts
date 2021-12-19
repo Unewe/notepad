@@ -25,7 +25,7 @@ class NotesService {
 
   update(note: Note): void {
     axios.put<Note>('/api/notes', note).then(
-      (value) => notesStore.update(value.data.text),
+      (_value) => notesStore.update(note),
       (reason) => {
         throw (
           Object.values(reason?.response?.data?.errors ?? {}).flat(

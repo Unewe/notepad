@@ -29,12 +29,12 @@ class NotesStore {
     this.list = [...this.list, note];
   }
 
-  update(text: string): void {
-    const note = this._list.find((value) => value.id === this._editId);
+  update(note: Note): void {
+    const target = this._list.find((value) => value.id === note.id);
 
-    if (note) {
+    if (target) {
       const tmp = [...this.list];
-      tmp[this._list.indexOf(note)] = { ...note, text };
+      tmp[this._list.indexOf(target)] = note;
 
       this.list = tmp;
     }

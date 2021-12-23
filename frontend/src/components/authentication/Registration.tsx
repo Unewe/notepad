@@ -79,7 +79,7 @@ export const Registration: React.FC = observer((): React.ReactElement => {
           <TextField
             margin='dense'
             label='Повторите пароль'
-            // type="password"
+            type='password'
             fullWidth
             variant='outlined'
             error={!!errors.repeat}

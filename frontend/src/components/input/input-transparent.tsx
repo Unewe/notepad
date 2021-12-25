@@ -1,12 +1,9 @@
 import React from 'react';
 import { styled } from '@mui/system';
-import { OutlinedInputProps, TextField, TextFieldProps } from '@mui/material';
+import { TextField, TextFieldProps } from '@mui/material';
 
 export const TransparentInput = styled((props: TextFieldProps) => (
-  <TextField
-    InputProps={{ disableUnderline: true } as Partial<OutlinedInputProps>}
-    {...props}
-  />
+  <TextField {...props} />
 ))(({ theme }) => ({
   width: '100%',
   padding: 0,

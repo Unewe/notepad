@@ -2,7 +2,13 @@
 ```
 docker-compose up -d
 ```
-Приложение будет доступно по адресу localhost:8000
+## Доступ
+### Апи:
+http://localhost:8000/api
+### Фронт:
+http://localhost:8000/web
+### Документация апи:
+http://localhost:8000/swagger
 
 ## Для запуска вручную:
 ### Backend:

@@ -1,4 +1,4 @@
-pip3 freeze > requirements.txt
+pip freeze > requirements.txt
 
 *** Для добавления модулей.
 python manage.py startapp apiName

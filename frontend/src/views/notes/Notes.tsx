@@ -1,4 +1,4 @@
-import React, { FormEvent } from 'react';
+import React from 'react';
 import Masonry from '@mui/lab/Masonry';
 import { Box, Container } from '@mui/material';
 import { Note } from '../../models/note.model';
@@ -7,12 +7,21 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { NotePaper } from '../../components/note-paper/NotePaper';
 import notes from '../../store/notes.store';
 import { observer } from 'mobx-react-lite';
+import { TransparentInput } from '../../components/input/input-transparent';
+import notesStore from '../../store/notes.store';
 
 export const Notes: React.FC = observer((): React.ReactElement => {
-  const handleChange = (event: FormEvent<HTMLDivElement>, note: Note) => {
-    const text: string = (event.target as HTMLDivElement).innerHTML;
+  const submit = (note: Note) => {
+    NotesService.update(note);
+  };
+
+  const onChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    note: Note
+  ) => {
+    const text: string = event.target.value;
     if (note.text !== text) {
-      NotesService.update({ ...note, text });
+      notesStore.update({ ...note, text });
     }
   };
 
@@ -49,6 +58,7 @@ export const Notes: React.FC = observer((): React.ReactElement => {
                 right: '-10px',
                 top: '-10px',
                 display: 'none',
+                zIndex: 10,
                 '&:hover': {
                   color: 'red',
                   cursor: 'pointer',
@@ -56,19 +66,20 @@ export const Notes: React.FC = observer((): React.ReactElement => {
               }}
             />
             <NotePaper
-              spellCheck={false}
-              contentEditable={true}
               key={note.id}
-              suppressContentEditableWarning={true}
-              onBlur={(event) => handleChange(event, note)}
-              onPaste={(event) => event.preventDefault()}
               sx={{
                 color: note.color || 'black',
                 backgroundColor: note.backgroundColor || 'white',
                 overflow: 'scroll',
+                position: 'relative',
               }}
             >
-              {note.text}
+              <TransparentInput
+                onBlur={() => submit(note)}
+                onChange={(event) => onChange(event, note)}
+                multiline
+                value={note.text}
+              />
             </NotePaper>
           </Box>
         ))}

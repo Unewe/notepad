@@ -1,11 +1,11 @@
 from django.contrib.auth import authenticate
+from drf_yasg import openapi
 from rest_framework import serializers
 
 from .models import User
 
 
 class RegistrationSerializer(serializers.ModelSerializer):
-    """ Сериализация регистрации пользователя и создания нового. """
     password = serializers.CharField(
         max_length=128,
         min_length=3,
@@ -67,3 +67,21 @@ class LoginSerializer(serializers.Serializer):
             'token': user.token,
             'password': user.password
         }
+
+
+class ResponseSerializerWithToken(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'token']
+
+
+login_response = openapi.Response('response description', ResponseSerializerWithToken)
+
+
+class ResponseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'username']
+
+
+user_response = openapi.Response('response description', ResponseSerializer)

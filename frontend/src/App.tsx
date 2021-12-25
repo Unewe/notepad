@@ -23,10 +23,10 @@ function App() {
           <Header />
         </header>
         <Routes>
-          <Route path='/about' element={<div>ABOUT</div>} />
-          <Route path='/notes' element={<Notes />} />
-          <Route path='/' element={<div>HOME</div>} />
-          <Route path='/*' element={<Navigate to='/' />} />
+          <Route path='/web/about' element={<div>ABOUT</div>} />
+          <Route path='/web/notes' element={<Notes />} />
+          <Route path='/web/' element={<div>HOME</div>} />
+          <Route path='/web/*' element={<Navigate to='/web' />} />
         </Routes>
       </Router>
       <Authentication />

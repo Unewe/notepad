@@ -15,9 +15,9 @@ import authentication from '../../store/authentication.store';
 import UsersService from '../../services/users.service';
 
 const routes: Array<{ label: string; href: string }> = [
-  { label: 'Главная', href: '/' },
-  { label: 'Заметки', href: '/notes' },
-  { label: 'About', href: '/about' },
+  { label: 'Главная', href: '/web' },
+  { label: 'Заметки', href: '/web/notes' },
+  { label: 'About', href: '/web/about' },
 ];
 
 const useStyles = makeStyles({

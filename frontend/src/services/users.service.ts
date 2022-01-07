@@ -27,7 +27,7 @@ class UsersService {
   }
 
   current(): void {
-    axios.get<LoginResponse>('api/users/current').then(
+    axios.get<LoginResponse>('/api/users/current').then(
       (value) => {
         authenticationStore.user = new User(value.data.id, value.data.username);
         NotesService.get();

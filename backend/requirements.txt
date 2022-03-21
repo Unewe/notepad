@@ -24,5 +24,6 @@ ruamel.yaml==0.17.18
 ruamel.yaml.clib==0.2.6
 simplejson==3.17.6
 sqlparse==0.4.2
+tzdata==2022.1
 uritemplate==4.1.1
 urllib3==1.26.7
